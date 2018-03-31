@@ -16,6 +16,7 @@ namespace lab4defence
         WorldContext db;
         public Form1()
         {
+
             InitializeComponent();
             db = new WorldContext();
             // вы водим в первую колонку
@@ -47,13 +48,7 @@ namespace lab4defence
             db.Cities.Load();
             dataGridView2.DataSource = db.Cities.Local.Where(p => p.CountryId == key).ToList();
             db.Treaties.Load();
-            ///       dataGridView3.DataSource =db.Treaties.Local.Where(p=>p.Countries.)
-
-
-            //=(from treaty in db.Treaties  where   treaty.Countries.Any(c=>c.Id==key).ToList(); 
-
-            //  Source.FirstOrDefault(cart => cart.Id == id).Products.Select().ToList();
-
+   
             db.Countries.Load();
             dataGridView3.DataSource = db.Treaties.ToList();
         }
