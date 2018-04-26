@@ -18,9 +18,6 @@ namespace lab4defence
                 Cities = new List<City>();                
                 Treaties = new List<Treaty>();
         }
-        public override string ToString()
-        {
-            return Name;
-        }
+   
     }
 }

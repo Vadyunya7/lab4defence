@@ -16,16 +16,23 @@ namespace lab4defence
         WorldContext db;
         public Form1()
         {
-
             InitializeComponent();
-            db = new WorldContext();
-            // вы водим в первую колонку
-            db.Countries.Load();
-            dataGridView1.DataSource = db.Countries.ToList();
+            try
+            {
+                db = new WorldContext();
+                // вы водим в первую колонку
+                db.Countries.Load();
+                dataGridView1.DataSource = db.Countries.ToList();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+            }
+       
         }
         private void addToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            TeamForm tmForm = new TeamForm();// 
+            TeamForm tmForm = new TeamForm();   
             DialogResult result = tmForm.ShowDialog(this);
             if (result == DialogResult.Cancel)
                 return;
@@ -33,10 +40,18 @@ namespace lab4defence
             Country country = new Country();
             country.Name = tmForm.textBox1.Text;
             country.Treaties = new List<Treaty>();
-            db.Countries.Add(country);
-            db.SaveChanges();
-            db.Countries.Load();
-            dataGridView1.DataSource = db.Countries.Local.ToList();
+            try
+            {
+                db.Countries.Add(country);
+                db.SaveChanges();
+                db.Countries.Load();
+                dataGridView1.DataSource = db.Countries.Local.ToList();
+            }
+            catch(Exception error)
+            {
+                MessageBox.Show(error.ToString());
+            }
+            
         }
 
      
@@ -70,11 +85,16 @@ namespace lab4defence
             city.CountryId = c.Id;
             city.Name = plForm.textBox1.Text;
             city.Country = c;
-
-            db.Cities.Add(city);
-            db.SaveChanges();
-            db.Countries.Load();
-            dataGridView2.DataSource = db.Cities.Local.Where(p => p.CountryId == key).ToList();
+            try
+            {
+                db.Cities.Add(city);
+                db.SaveChanges();
+                db.Countries.Load();
+                dataGridView2.DataSource =   db.Cities.Local.Where(p => p.CountryId == key).ToList();
+            }catch(Exception error)
+            {
+                MessageBox.Show(error.ToString());
+            }
 
         }
         private void delToolStripMenuItem_Click(object sender, EventArgs e)
@@ -83,11 +103,11 @@ namespace lab4defence
             {
                 int index = dataGridView1.SelectedRows[0].Index;
                 int id = 0;
-                bool converted = Int32.TryParse(dataGridView1[0, index].Value.ToString(), out id);
+                bool converted = int.TryParse(dataGridView1[0, index].Value.ToString(), out  id);
                 if (converted == false)
                     return;
-                Country team = db.Countries.Find(id);
-                db.Countries.Remove(team);
+                Country country = db.Countries.Find(id);
+                db.Countries.Remove(country);
                 db.SaveChanges();
                 db.Countries.Load();
                 dataGridView1.DataSource = db.Countries.Local.ToBindingList();
@@ -99,7 +119,7 @@ namespace lab4defence
             {
                 int index = dataGridView2.SelectedRows[0].Index;
                 int id = 0;
-                bool converted = Int32.TryParse(dataGridView2[0, index].Value.ToString(), out id);
+                bool converted = int.TryParse(dataGridView2[0, index].Value.ToString(), out id);
                 if (converted == false)
                     return;
 
@@ -124,19 +144,19 @@ namespace lab4defence
             {
                 int index = dataGridView1.SelectedRows[0].Index;
                 int id = 0;
-                bool converted = Int32.TryParse(dataGridView1[0, index].Value.ToString(), out id);
+                bool converted = int.TryParse(dataGridView1[0, index].Value.ToString(), out id);
                 if (converted == false)
                     return;
 
-                Country team = db.Countries.Find(id);
+                Country country = db.Countries.Find(id);
                 TeamForm tmForm = new TeamForm();
-                tmForm.textBox1.Text = team.Name;
+                tmForm.textBox1.Text = country.Name;
                 DialogResult result = tmForm.ShowDialog(this);
                 if (result == DialogResult.Cancel)
                     return;
 
-                team.Name = tmForm.textBox1.Text;
-                db.Entry(team).State = EntityState.Modified;
+                country.Name = tmForm.textBox1.Text;
+                db.Entry(country).State = EntityState.Modified;
                 db.SaveChanges();
                 MessageBox.Show("Объект обновлен");
                 db.Countries.Load();
@@ -151,7 +171,7 @@ namespace lab4defence
                 int id = 0;
                 int key = (int)dataGridView1.Rows[dataGridView1.SelectedCells[0].RowIndex].Cells[0].Value;
 
-                bool converted = Int32.TryParse(dataGridView2[0, index].Value.ToString(), out id);
+                bool converted = int.TryParse(dataGridView2[0, index].Value.ToString(), out id);
                 if (converted == false)
                     return;              
 

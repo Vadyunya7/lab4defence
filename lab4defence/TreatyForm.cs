@@ -17,7 +17,13 @@ namespace lab4defence
         public TreatyForm()
         {
             InitializeComponent();
-            db = new WorldContext();
+            try
+            {
+                db = new WorldContext();
+            }catch(Exception error)
+            {
+                MessageBox.Show(error.ToString());
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
